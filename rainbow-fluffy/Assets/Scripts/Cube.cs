@@ -25,7 +25,7 @@ public class Cube : MonoBehaviour
             Jump();
         }
 
-        if (Input.touchCount > 0)
+/*        if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
             switch(touch.phase)
@@ -39,7 +39,7 @@ public class Cube : MonoBehaviour
                     touching = false;
                     break;
             }
-        }
+        }*/
     }
 
     void FixedUpdate()
