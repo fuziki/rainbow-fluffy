@@ -9,6 +9,8 @@ public class Cube : MonoBehaviour
     float jumpPower = 18;
     float gravityPower = -36;
 
+    private bool touching = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +31,12 @@ public class Cube : MonoBehaviour
             switch(touch.phase)
             {
                 case TouchPhase.Began:
+                    if (touching) return;
+                    touching = true;
                     Jump();
+                    break;
+                case TouchPhase.Ended:
+                    touching = false;
                     break;
             }
         }
