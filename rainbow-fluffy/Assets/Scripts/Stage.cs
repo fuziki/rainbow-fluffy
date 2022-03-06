@@ -15,7 +15,7 @@ public class Stage : MonoBehaviour
     {
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         this.transform.Translate(-0.3f, 0, 0);
     }
