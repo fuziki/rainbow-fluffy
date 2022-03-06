@@ -4,21 +4,32 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
+    [SerializeField]
+    Rigidbody rigidbody;
+
+    float jumpPower = 3000;
+    float gravityPower = -700;
+
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        var y = Mathf.Max(this.transform.position.y - 0.01f, 0);
-        this.transform.position = new Vector3(0, y, 0);
+        if (rigidbody.velocity.y < -50) {
+            Debug.Log($"v: {rigidbody.velocity.y}");
+        }
+        else
+        {
+            rigidbody.AddForce(new Vector3(0, gravityPower, 0));
+        }
     }
 
     public void Jump()
     {
-        this.transform.position += new Vector3(0, 3, 0);
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.AddForce(transform.up * jumpPower, ForceMode.Impulse);
     }
 }
