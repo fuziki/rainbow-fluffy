@@ -9,8 +9,6 @@ public class Cube : MonoBehaviour
     float jumpPower = 18;
     float gravityPower = -36;
 
-    private bool touching = false;
-
     // Start is called before the first frame update
     void Start()
     {
