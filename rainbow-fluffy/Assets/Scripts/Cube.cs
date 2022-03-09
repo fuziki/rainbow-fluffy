@@ -9,6 +9,8 @@ public class Cube : MonoBehaviour
     float jumpPower = 18;
     float gravityPower = -36;
 
+    int jumping = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,26 +20,16 @@ public class Cube : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && jumping < 2)
         {
+            jumping++;
             Jump();
         }
 
-/*        if (Input.touchCount > 0)
+        if (this.transform.position.y < -5)
         {
-            Touch touch = Input.GetTouch(0);
-            switch(touch.phase)
-            {
-                case TouchPhase.Began:
-                    if (touching) return;
-                    touching = true;
-                    Jump();
-                    break;
-                case TouchPhase.Ended:
-                    touching = false;
-                    break;
-            }
-        }*/
+            Debug.Log("Game Over");
+        }
     }
 
     void FixedUpdate()
@@ -49,6 +41,19 @@ public class Cube : MonoBehaviour
         else
         {
             rb.AddForce(new Vector3(0, gravityPower, 0));
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.tag == "Floor")
+        {
+            jumping = 0;
+        }
+        if (collision.collider.tag == "Goal")
+        {
+            jumping = 0;
+            Debug.Log("Goal!!!");
         }
     }
 
