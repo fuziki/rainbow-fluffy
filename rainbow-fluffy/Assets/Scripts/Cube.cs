@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 public class Cube : MonoBehaviour
 {
@@ -11,10 +13,18 @@ public class Cube : MonoBehaviour
 
     int jumping = 0;
 
+    public IObservable<Unit> OnGameClear => _onGameClear;
+    private readonly Subject<Unit> _onGameClear = new Subject<Unit>();
+    public IObservable<Unit> OnGameOver => _onGameOver;
+    private readonly Subject<Unit> _onGameOver = new Subject<Unit>();
+
+    private Vector3 _startPosition;
+
     // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
+        _startPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -26,9 +36,9 @@ public class Cube : MonoBehaviour
             Jump();
         }
 
-        if (this.transform.position.y < -5)
+        if (this.transform.position.y < -15)
         {
-            Debug.Log("Game Over");
+            _onGameOver.OnNext(Unit.Default);
         }
     }
 
@@ -38,7 +48,7 @@ public class Cube : MonoBehaviour
         {
             Debug.Log($"v: {rb.velocity.y}");
         }
-        else
+        else if (rb.useGravity)
         {
             rb.AddForce(new Vector3(0, gravityPower, 0));
         }
@@ -53,13 +63,25 @@ public class Cube : MonoBehaviour
         if (collision.collider.tag == "Goal")
         {
             jumping = 0;
-            Debug.Log("Goal!!!");
+            _onGameClear.OnNext(Unit.Default);
         }
     }
 
-    public void Jump()
+    private void Jump()
     {
         rb.velocity = Vector3.zero;
         rb.AddForce(transform.up * jumpPower, ForceMode.Impulse);
+    }
+
+    public void ResetToStart()
+    {
+        this.transform.position = _startPosition;
+    }
+
+    public void Pause(bool isPaused)
+    {
+        Debug.Log($"Pause ${isPaused}");
+        rb.useGravity = !isPaused;
+        rb.velocity = Vector3.zero;
     }
 }

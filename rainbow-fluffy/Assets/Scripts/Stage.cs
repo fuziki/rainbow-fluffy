@@ -4,10 +4,15 @@ using UnityEngine;
 
 public class Stage : MonoBehaviour
 {
+
+    private Vector3 _startPosition;
+    private float _moveSpeed = -0.3f;
+    private bool gaming = false;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        _startPosition = transform.position;
     }
 
     // Update is called once per frame
@@ -17,6 +22,22 @@ public class Stage : MonoBehaviour
 
     void FixedUpdate()
     {
-        this.transform.Translate(-0.3f, 0, 0);
+        if (!gaming) return;
+        this.transform.Translate(_moveSpeed, 0, 0);
+    }
+
+    public void StartGame()
+    {
+        gaming = true;
+    }
+
+    public void StopGame()
+    {
+        gaming = false;
+    }
+
+    public void ResetToStart()
+    {
+        this.transform.position = _startPosition;
     }
 }
