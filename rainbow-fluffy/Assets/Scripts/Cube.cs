@@ -20,6 +20,8 @@ public class Cube : MonoBehaviour
 
     private Vector3 _startPosition;
 
+    private string prevHitTag = "";
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,6 +46,36 @@ public class Cube : MonoBehaviour
 
     void FixedUpdate()
     {
+        float distance = 0.1f;
+        var origin = transform.position + new Vector3(0, -1.45f, 0);
+        var ray = new Ray(origin, transform.up * -1);
+        Debug.DrawRay(ray.origin, ray.direction * distance, Color.red);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, distance))        {
+            var prev = prevHitTag;
+            prevHitTag = hit.collider.tag;
+            if (prev == hit.collider.tag) return;
+            switch(hit.collider.tag)
+            {
+                case "Floor":
+                    jumping = 0;
+                    break;
+                case "Jumper":
+                    jumping = 0;
+                    break;
+                case "Goal":
+                    jumping = 0;
+                    _onGameClear.OnNext(Unit.Default);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            prevHitTag = "";
+        }
+
         if (rb.velocity.y < -50)
         {
             Debug.Log($"v: {rb.velocity.y}");
@@ -54,16 +86,13 @@ public class Cube : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.tag == "Floor")
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.tag == "Jumper")
         {
-            jumping = 0;
-        }
-        if (collision.collider.tag == "Goal")
-        {
-            jumping = 0;
-            _onGameClear.OnNext(Unit.Default);
+            rb.velocity = Vector3.zero;
+            rb.AddForce(transform.up * jumpPower * 1.5f, ForceMode.Impulse);
         }
     }
 
