@@ -88,6 +88,7 @@ public class Cube : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        // ‚±‚±‚Å‰ºŒü‚«‚É­‚µ’·‚ß‚Ìray‚ğ”ò‚Î‚µ‚Ä”»’è‚É‚µ‚Ä‚à‚¢‚¢‚©‚à
         Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.tag == "Jumper")
         {
